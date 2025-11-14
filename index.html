@@ -1,12 +1,60 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>| interpreter</title>
-  </head>
-  <body>
-    <textarea id="input"></textarea>
-  	<button onclick="run()">Interpretar</button>
-	  <pre id="output"></pre>
-	  <script src="interpreter.js"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<title>Pipe Interpreter</title>
+<style>
+body { font-family: monospace; padding: 20px; background: #111; color: #eee; }
+textarea { width: 100%; height: 200px; background: #222; color: #0f0; padding: 10px; }
+button { padding: 10px 20px; margin: 10px 0; background: #444; color: #fff; border: none; cursor: pointer; }
+pre { background: #222; padding: 10px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<h2>Intérprete de Palitos</h2>
+
+<textarea id="input" placeholder="Pega aquí tu código de palitos"></textarea>
+<button onclick="run()">Interpretar</button>
+
+<pre id="output"></pre>
+
+<script>
+const pipe_to_number = {
+  "||": "1", "||||": "2", "||||||": "3", "||||||||": "4",
+  "||||||||||": "5", "||||||||||||": "6", "||||||||||||||": "7",
+  "||||||||||||||||": "8", "||||||||||||||||||": "9",
+  "||||||||||||||||||||": "0"
+};
+
+const number_to_pipe = {};
+for (let k in pipe_to_number) number_to_pipe[pipe_to_number[k]] = k;
+
+function pe_to_num(pe) {
+  return parseInt(pipe_to_number[pe]);
+}
+
+function pipetopy(code) {
+  const lines = code.split("I");
+  return lines.map(line => {
+    const pipes = line.trim().split("l");
+    let out = "";
+    for (const pipe of pipes) {
+      let rr = "";
+      for (const pp of pipe.split("i")) {
+        if (pp !== "") rr += pe_to_num(pp);
+      }
+      if (rr !== "") out += String.fromCharCode(parseInt(rr));
+    }
+    return out;
+  }).join("\n");
+}
+
+function run() {
+  const input = document.getElementById("input").value;
+  document.getElementById("output").textContent = pipetopy(input);
+}
+</script>
+
+</body>
 </html>
